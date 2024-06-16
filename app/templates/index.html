@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
+    </header>
+    <div>
+        <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
+        <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
+        <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+    </div>
+</body>
+</html>
