@@ -4,39 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body, html {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .content {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
-    </header>
-    <div>
-        {% if current_user.is_anonymous %}
-            <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
-            <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
-        {% else %}
-            <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
-        {% endif %}
-    </div>
-    {% if current_user.is_authenticated %}
+    <div class="content">
+        <header>
+            <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
+        </header>
         <div>
-            <button id="counterBtn">Click Me!</button>
-            <p>Score: <span id="count">{{ current_user.count }}</span></p>
+            {% if current_user.is_anonymous %}
+                <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
+                <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
+            {% else %}
+                <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+            {% endif %}
+        </div>
+        <br>
+        {% if current_user.is_authenticated %}
+            <div>
+                <button id="counterBtn">Click Me!</button>
+                <p>Score: <span id="count">{{ current_user.score }}</span></p>
 
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $('#counterBtn').click(function() {
-                        $.ajax({
-                            type: 'POST',
-                            url: '{{ url_for("main.counter") }}',
-                            success: function(response) {
-                                $('#count').text(response.count);
-                            }
+                <script type="text/javascript">
+                    $(document).ready(function() {
+                        $('#counterBtn').click(function() {
+                            $.ajax({
+                                type: 'POST',
+                                url: '{{ url_for("main.score") }}',
+                                success: function(response) {
+                                    $('#count').text(response.score);
+                                }
+                            });
                         });
                     });
-                });
-            </script>
+                </script>
+            </div>
+        {% endif %}
+        <div>
+            <h2>Leaderboard</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Username</th>
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in top_users %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.score }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
-    {% endif %}
-
+    </div>
 </body>
 </html>

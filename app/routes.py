@@ -7,7 +7,8 @@ from app.models import *
 @main.route('/')
 @main.route('/index')
 def index():
-    return render_template('index.html')
+    top_users = db.session.query(User).order_by(User.score.desc()).limit(10).all()
+    return render_template('index.html', top_users=top_users)
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -42,9 +43,9 @@ def signup():
         return redirect(url_for('main.login'))
     return render_template('signUp.html', form=form)
 
-@main.route('/counter', methods=['POST'])
+@main.route('/score', methods=['POST'])
 @login_required
-def counter():
-    current_user.count += 1
+def score():
+    current_user.score += 1
     db.session.commit()
-    return jsonify({'count': current_user.count})
+    return jsonify({'score': current_user.score})
