@@ -1,4 +1,4 @@
-from flask import flash, redirect, render_template, request, url_for
+from flask import flash, redirect, render_template, request, url_for, jsonify
 from flask_login import current_user, login_required, login_user, logout_user
 from app.blueprints import main
 from app.forms import *
@@ -35,9 +35,16 @@ def signup():
     if current_user.is_authenticated:
         return redirect(url_for('main.index'))
     if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
+        user = User(username=form.username.data, email=form.email.data, score = 0)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('main.login'))
     return render_template('signUp.html', form=form)
+
+@main.route('/counter', methods=['POST'])
+@login_required
+def counter():
+    current_user.count += 1
+    db.session.commit()
+    return jsonify({'count': current_user.count})

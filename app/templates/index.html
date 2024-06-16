@@ -10,9 +10,33 @@
         <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
     </header>
     <div>
-        <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
-        <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
-        <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+        {% if current_user.is_anonymous %}
+            <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
+            <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
+        {% else %}
+            <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+        {% endif %}
     </div>
+    {% if current_user.is_authenticated %}
+        <div>
+            <button id="counterBtn">Click Me!</button>
+            <p>Score: <span id="count">{{ current_user.count }}</span></p>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#counterBtn').click(function() {
+                        $.ajax({
+                            type: 'POST',
+                            url: '{{ url_for("main.counter") }}',
+                            success: function(response) {
+                                $('#count').text(response.count);
+                            }
+                        });
+                    });
+                });
+            </script>
+        </div>
+    {% endif %}
+
 </body>
 </html>
