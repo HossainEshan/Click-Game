@@ -60,16 +60,41 @@
                         <th>Score</th>
                     </tr>
                 </thead>
-                <tbody>
-                    {% for user in top_users %}
-                    <tr>
-                        <td>{{ loop.index }}</td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.score }}</td>
-                    </tr>
-                    {% endfor %}
+                <tbody id="leaderboard-body">
+                    <!-- Table rows will be dynamically added here -->
                 </tbody>
             </table>
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+
+                    updateLeaderboard();
+
+                    setInterval(updateLeaderboard, 500);
+
+                    function updateLeaderboard() {
+                        $.ajax({
+                            type: 'GET',
+                            url: '{{ url_for("main.top_users") }}',
+                            dataType: 'json',
+                            success: function(response) {
+                                var leaderboardBody = $('#leaderboard-body');
+                                leaderboardBody.empty();
+                                $.each(response.top_users, function(index, user) {
+                                    var row = $('<tr>');
+                                    row.append($('<td>').text(index + 1));
+                                    row.append($('<td>').text(user.username));
+                                    row.append($('<td>').text(user.score));
+                                    leaderboardBody.append(row);
+                                });
+                            },
+                            error: function(xhr, status, error) {
+                                console.error('Error updating leaderboard:', error);
+                            }
+                        });
+                    }
+                });
+            </script>
         </div>
     </div>
 </body>

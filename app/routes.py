@@ -7,8 +7,7 @@ from app.models import *
 @main.route('/')
 @main.route('/index')
 def index():
-    top_users = db.session.query(User).order_by(User.score.desc()).limit(10).all()
-    return render_template('index.html', top_users=top_users)
+    return render_template('index.html')
 
 @main.route('/login', methods=['GET', 'POST'])
 def login():
@@ -49,3 +48,9 @@ def score():
     current_user.score += 1
     db.session.commit()
     return jsonify({'score': current_user.score})
+
+@main.route('/top_users', methods=['GET'])
+def top_users():
+    top_users = db.session.query(User).order_by(User.score.desc()).limit(10).all()
+    users_list = [{'username': user.username, 'score': user.score} for user in top_users]
+    return jsonify({'top_users': users_list})
