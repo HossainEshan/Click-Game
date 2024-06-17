@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickGame</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <style>
+        body, html {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+        }
+        .content {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content" 
+     data-score-url="{{ url_for('main.score') }}" 
+     data-top-users-url="{{ url_for('main.top_users') }}">
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

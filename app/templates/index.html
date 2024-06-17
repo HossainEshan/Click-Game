@@ -1,101 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body, html {
-            margin: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .content {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="content">
-        <header>
-            <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
-        </header>
-        <div>
-            {% if current_user.is_anonymous %}
-                <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
-                <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
-            {% else %}
-                <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
-            {% endif %}
-        </div>
-        <br>
-        {% if current_user.is_authenticated %}
-            <div>
-                <button id="counterBtn">Click Me!</button>
-                <p>Score: <span id="count">{{ current_user.score }}</span></p>
+{% extends "base.html" %}
 
-                <script type="text/javascript">
-                    $(document).ready(function() {
-                        $('#counterBtn').click(function() {
-                            $.ajax({
-                                type: 'POST',
-                                url: '{{ url_for("main.score") }}',
-                                success: function(response) {
-                                    $('#count').text(response.score);
-                                }
-                            });
-                        });
-                    });
-                </script>
-            </div>
-        {% endif %}
-        <div>
-            <h2>Leaderboard</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Rank</th>
-                        <th>Username</th>
-                        <th>Score</th>
-                    </tr>
-                </thead>
-                <tbody id="leaderboard-body">
-                    <!-- Table rows will be dynamically added here -->
-                </tbody>
-            </table>
+{% block content %}
 
-            <script type="text/javascript">
-                $(document).ready(function() {
-
-                    updateLeaderboard();
-
-                    setInterval(updateLeaderboard, 500);
-
-                    function updateLeaderboard() {
-                        $.ajax({
-                            type: 'GET',
-                            url: '{{ url_for("main.top_users") }}',
-                            dataType: 'json',
-                            success: function(response) {
-                                var leaderboardBody = $('#leaderboard-body');
-                                leaderboardBody.empty();
-                                $.each(response.top_users, function(index, user) {
-                                    var row = $('<tr>');
-                                    row.append($('<td>').text(index + 1));
-                                    row.append($('<td>').text(user.username));
-                                    row.append($('<td>').text(user.score));
-                                    leaderboardBody.append(row);
-                                });
-                            },
-                            error: function(xhr, status, error) {
-                                console.error('Error updating leaderboard:', error);
-                            }
-                        });
-                    }
-                });
-            </script>
-        </div>
+<header>
+    <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
+</header>
+<div>
+    {% if current_user.is_anonymous %}
+        <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
+        <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
+    {% else %}
+        <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+    {% endif %}
+</div>
+<br>
+{% if current_user.is_authenticated %}
+    <div>
+        <button id="counterBtn">Click Me!</button>
+        <p>Score: <span id="count">{{ current_user.score }}</span></p>
     </div>
-</body>
-</html>
+{% endif %}
+<div>
+    <h2>Leaderboard</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Username</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+            <!-- Table rows will be dynamically added here -->
+        </tbody>
+    </table>
+</div>
+{% endblock %}

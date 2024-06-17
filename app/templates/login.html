@@ -1,49 +1,30 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home Page</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body, html {
-            margin: 10px;
-            display: flex;
-            justify-content: center;
-        }
-        .content {
-            text-align: center;
-        }
-    </style>
-</head>
-<body>
-    <div class="content">
-    <header>
-      <h1>Login</h1>
-    </header>
-    
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="alert alert-danger">
-                {{ messages[0] }}
-            </div>
-        {% endif %}
-    {% endwith %}
+{% extends "base.html" %}
 
-    <form method="POST" action="{{ url_for('main.login') }}">
-        {{ form.hidden_tag() }}
-        <div class="form-group">
-        <label for="username">Username</label>
-        {{ form.username(class="form-control", id="username", placeholder="Enter username") }}
+{% block content %}
+<header>
+    <h1>Login</h1>
+</header>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-danger">
+            {{ messages[0] }}
         </div>
-        <div class="form-group">
-        <label for="password">Password</label>
-        {{ form.password(class="form-control", id="password", placeholder="Password") }}
-        </div>
-        <div class="form-group d-grid mt-2">
-            {{ form.submit(class="btn btn-block btn2 btn-dark rounded") }}
-        </div>
-    </form>
+    {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('main.login') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+    <label for="username">Username</label>
+    {{ form.username(class="form-control", id="username", placeholder="Enter username") }}
     </div>
-</body>
-</html>
+    <div class="form-group">
+    <label for="password">Password</label>
+    {{ form.password(class="form-control", id="password", placeholder="Password") }}
+    </div>
+    <div class="form-group d-grid mt-2">
+        {{ form.submit(class="btn btn-block btn2 btn-dark rounded") }}
+    </div>
+</form>
+{% endblock %}
