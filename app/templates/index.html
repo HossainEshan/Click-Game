@@ -1,38 +1,58 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
 
-{% block content %}
-
-<header>
-    <h1>Welcome {{ current_user.username if current_user.is_authenticated else 'Anonymous' }}</h1>
-</header>
-<div>
+<div class="container">
+  <header class="mt-5">
+    <h1 class="text-center">
+      Welcome {{ current_user.username if current_user.is_authenticated else
+      'Anonymous' }}
+    </h1>
+  </header>
+  <div class="text-center mt-3">
     {% if current_user.is_anonymous %}
-        <button onclick="location.href='{{ url_for('main.login') }}'">Login</button>
-        <button onclick="location.href='{{ url_for('main.signup') }}'">Register</button>
+    <button
+      class="btn btn-primary"
+      onclick="location.href='{{ url_for('main.login') }}'"
+    >
+      Login
+    </button>
+    <button
+      class="btn btn-secondary"
+      onclick="location.href='{{ url_for('main.signup') }}'"
+    >
+      Register
+    </button>
     {% else %}
-        <button onclick="location.href='{{ url_for('main.logout') }}'">Logout</button>
+    <button
+      class="btn btn-danger"
+      onclick="location.href='{{ url_for('main.logout') }}'"
+    >
+      Logout
+    </button>
     {% endif %}
-</div>
-<br>
-{% if current_user.is_authenticated %}
-    <div>
-        <button id="counterBtn">Click Me!</button>
-        <p>Score: <span id="count">{{ current_user.score }}</span></p>
-    </div>
-{% endif %}
-<div>
-    <h2>Leaderboard</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Rank</th>
-                <th>Username</th>
-                <th>Score</th>
-            </tr>
+  </div>
+  <br />
+  {% if current_user.is_authenticated %}
+  <div class="text-center mt-4">
+    <button id="counterBtn" class="btn btn-gradient click-me">Click Me!</button>
+    <p class="mt-2">Score: <span id="count">{{ current_user.score }}</span></p>
+  </div>
+  {% endif %}
+  <div class="mt-5">
+    <h2 class="text-center">Leaderboard</h2>
+    <div class="table-container mx-auto">
+      <table class="table table-striped table-rounded mt-3">
+        <thead class="thead-gradient">
+          <tr>
+            <th scope="col">Rank</th>
+            <th scope="col">Username</th>
+            <th scope="col">Score</th>
+          </tr>
         </thead>
         <tbody id="leaderboard-body">
-            <!-- Table rows will be dynamically added here -->
+          <!-- Table rows will be dynamically added here -->
         </tbody>
-    </table>
+      </table>
+    </div>
+  </div>
 </div>
 {% endblock %}
